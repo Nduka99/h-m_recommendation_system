@@ -26,3 +26,7 @@ hm_recsys_app/artifacts/*
 data/
 
 hm_recsys_app/deployment_artifacts/
+
+# Verification Scripts
+verify_*.py
+verify_*.ps1
