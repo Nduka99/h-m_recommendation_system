@@ -24,3 +24,5 @@ hm_recsys_app/artifacts/*
 !hm_recsys_app/artifacts/.keep
 
 data/
+
+hm_recsys_app/deployment_artifacts/
