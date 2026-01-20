@@ -1,0 +1,26 @@
+# Virtual Environments
+.hnm/
+.hnm_backup/
+.hnm_py312/
+venv/
+env/
+.env
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Large Data & Artifacts
+*.parquet
+*.duckdb
+*.index
+*.pkl
+*.model
+*.csv
+*.zip
+
+# Deployment Artifacts (Heavy files)
+hm_recsys_app/artifacts/*
+!hm_recsys_app/artifacts/.keep
+
+data/
