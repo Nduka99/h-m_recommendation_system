@@ -19,25 +19,17 @@ __pycache__/
 *.csv
 *.zip
 
-# Deployment Artifacts (Heavy files)
-hm_recsys_app/artifacts/*
-!hm_recsys_app/artifacts/.keep
-
-# Allow Backend Deployment Artifacts (force include)
-!hm_recsys_app/backend/artifacts/*.parquet
-!hm_recsys_app/backend/artifacts/*.txt
-!hm_recsys_app/backend/artifacts/*.pkl
-# But still ignore the huge index file
-*.index
-
+# Ignore data folder (heavy local data)
 data/
 
-hm_recsys_app/deployment_artifacts/
+# Backend Artifacts (Include lightweight model files needed for docker build)
+!backend/artifacts/*.parquet
+!backend/artifacts/*.txt
+!backend/artifacts/*.pkl
+# Trigger ignore for specific large files if they accidentally get in
+backend/artifacts/*.index
 
-# Verification Scripts
-verify_*.py
-verify_*.ps1
-debug_*.py
-relaunch_*.ps1
+# Verification Scripts (Keep these ignored if they are just local tools, or track them if needed. Un-comment to track)
+# scripts/verify_*.py
+# scripts/debug_*.py
 
-deploy_to_dockerhub.ps1
