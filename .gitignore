@@ -30,6 +30,6 @@ data/
 backend/artifacts/*.index
 
 # Verification Scripts (Keep these ignored if they are just local tools, or track them if needed. Un-comment to track)
-# scripts/verify_*.py
-# scripts/debug_*.py
+scripts/
+
 
