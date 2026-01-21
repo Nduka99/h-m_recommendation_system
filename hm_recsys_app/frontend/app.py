@@ -97,9 +97,28 @@ def get_image_url(article_id_str):
         if os.path.exists(local_path):
             return local_path
             
-    # 2. Fallback to Web (likely placeholder)
+    # 2. Fallback to Web (with validation)
+    # These items are from 2020, so many public URLs are dead. 
+    # We use a placeholder if the H&M link is broken to keep the UI clean.
     url = f"https://lp2.hm.com/hmgoepprod?set=source[/{folder}/{article_id_str}.jpg],origin[dam],category[],type[LOOKBOOK],res[m],hmver[1]&call=url[file:/product/main]"
+    
     return url
+
+@st.cache_data(show_spinner=False)
+def validate_image_url(url):
+    """
+    Checks if an image URL is alive. Returns the URL if yes, else a placeholder.
+    Cached to prevent slowing down the app.
+    """
+    try:
+        # Fast HEAD request
+        r = requests.head(url, timeout=0.8)
+        if r.status_code == 200:
+            return url
+    except:
+        pass
+    # Return a clean placeholder
+    return "https://via.placeholder.com/300x445/21262d/ffffff?text=Image+Unavailable"
 
 def get_recommendations(customer_id):
     try:
@@ -159,7 +178,8 @@ if customer_id:
             col = cols[idx % 4]
             with col:
                 # Image
-                img_url = get_image_url(article_id)
+                raw_url = get_image_url(article_id)
+                img_url = validate_image_url(raw_url)
                 st.image(img_url, use_container_width=True)
                 
                 # Caption / Details
