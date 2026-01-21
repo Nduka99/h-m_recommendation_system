@@ -7,11 +7,15 @@ RUN apt-get update && apt-get install -y \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
-COPY . .
+# Copy source code (from backend folder)
+COPY backend/ .
+
+# Copy artifacts (from sibling folder)
+# We put them in /artifacts so that "../artifacts" in the code works (relative to /app)
+COPY artifacts/ /artifacts
 
 # Expose port
 EXPOSE 8000
