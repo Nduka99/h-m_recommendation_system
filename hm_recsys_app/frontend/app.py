@@ -160,9 +160,11 @@ def validate_image_url(url):
     Checks if an image URL is alive. Returns the URL if yes, else a placeholder.
     """
     try:
-        # H&M often returns 200 for broken images (soft 404), but let's try basic connection
+        # H&M often returns 200 for broken images (soft 404). 
+        # We MUST check Content-Type to ensure it's a real image and not an error page/pixel.
         r = requests.head(url, timeout=1.5)
-        if r.status_code == 200:
+        content_type = r.headers.get("Content-Type", "").lower()
+        if r.status_code == 200 and "image" in content_type:
             return url
     except:
         pass
