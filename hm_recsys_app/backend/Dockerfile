@@ -12,8 +12,14 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all local files (includes artifacts/ now)
+# Copy all local files
 COPY . .
+
+# Be explicit about artifacts to ensure they are captured even if context is weird
+COPY artifacts/ artifacts/
+
+# DEBUG: List the artifacts directory to confirm files are present during build
+RUN ls -la artifacts/
 
 # Expose port
 EXPOSE 8000
