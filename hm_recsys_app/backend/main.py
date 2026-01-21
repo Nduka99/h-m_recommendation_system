@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # --- Configuration ---
 # Allow overriding the artifact path via Environment Variable (good for Docker)
-ARTIFACT_DIR = os.getenv("ARTIFACT_DIR", "../artifacts") 
+ARTIFACT_DIR = os.getenv("ARTIFACT_DIR", "artifacts") 
 # Note: In Docker, we might map artifacts to /app/artifacts, so default might need adjusting based on deployment.
 # For local testing from 'hm_recsys_app/backend', '../artifacts' is correct.
 

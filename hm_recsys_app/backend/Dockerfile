@@ -8,15 +8,12 @@ RUN apt-get update && apt-get install -y \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy from Repo Root: hm_recsys_app/backend/requirements.txt
-COPY hm_recsys_app/backend/requirements.txt .
+# Copy local requirements
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend code
-COPY hm_recsys_app/backend/ .
-
-# Copy artifacts from repo root
-COPY artifacts/ /artifacts
+# Copy all local files (includes artifacts/ now)
+COPY . .
 
 # Expose port
 EXPOSE 8000
