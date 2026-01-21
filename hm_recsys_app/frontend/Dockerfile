@@ -2,10 +2,10 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY frontend/requirements.txt .
+COPY hm_recsys_app/frontend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY frontend/ .
+COPY hm_recsys_app/frontend/ .
 
 EXPOSE 8503
 

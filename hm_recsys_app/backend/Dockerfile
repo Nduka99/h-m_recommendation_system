@@ -1,24 +1,25 @@
+# Start from python slim
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install system dependencies (libgomp1 for LightGBM)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY backend/requirements.txt .
+# Copy from Repo Root: hm_recsys_app/backend/requirements.txt
+COPY hm_recsys_app/backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code (from backend folder)
-COPY backend/ .
+# Copy backend code
+COPY hm_recsys_app/backend/ .
 
-# Copy artifacts (from sibling folder)
-# We put them in /artifacts so that "../artifacts" in the code works (relative to /app)
+# Copy artifacts from repo root
 COPY artifacts/ /artifacts
 
 # Expose port
 EXPOSE 8000
 
-# Command to run the application
+# Command
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
