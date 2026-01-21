@@ -30,3 +30,5 @@ hm_recsys_app/deployment_artifacts/
 # Verification Scripts
 verify_*.py
 verify_*.ps1
+debug_*.py
+relaunch_*.ps1
