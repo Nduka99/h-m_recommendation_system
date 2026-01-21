@@ -23,6 +23,13 @@ __pycache__/
 hm_recsys_app/artifacts/*
 !hm_recsys_app/artifacts/.keep
 
+# Allow Backend Deployment Artifacts (force include)
+!hm_recsys_app/backend/artifacts/*.parquet
+!hm_recsys_app/backend/artifacts/*.txt
+!hm_recsys_app/backend/artifacts/*.pkl
+# But still ignore the huge index file
+*.index
+
 data/
 
 hm_recsys_app/deployment_artifacts/
