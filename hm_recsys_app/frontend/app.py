@@ -164,7 +164,11 @@ def validate_image_url(url):
         # We MUST check Content-Type to ensure it's a real image and not an error page/pixel.
         r = requests.head(url, timeout=1.5)
         content_type = r.headers.get("Content-Type", "").lower()
-        if r.status_code == 200 and "image" in content_type:
+        content_length = int(r.headers.get("Content-Length", "0"))
+        
+        # Check 1: Must be an image
+        # Check 2: Must be larger than 1kb (H&M returns a 123-byte transparent pixel for missing items)
+        if r.status_code == 200 and "image" in content_type and content_length > 1000:
             return url
     except:
         pass
