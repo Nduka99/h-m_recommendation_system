@@ -92,10 +92,19 @@ def get_image_url(article_id_str):
     folder = article_id_str[:3]
     
     # 1. Local File Check
+    print(f"DEBUG: Checking ID {article_id_str}")
+    print(f"DEBUG: Env IMAGE_BASE_PATH: '{IMAGE_BASE_PATH}'")
+    
     if IMAGE_BASE_PATH and os.path.exists(IMAGE_BASE_PATH):
         local_path = os.path.join(IMAGE_BASE_PATH, folder, f"{article_id_str}.jpg")
+        print(f"DEBUG: Checking path: '{local_path}'")
         if os.path.exists(local_path):
+            print(f"DEBUG: FOUND local file: {local_path}")
             return local_path
+        else:
+            print(f"DEBUG: File NOT found at: {local_path}")
+    else:
+        print(f"DEBUG: IMAGE_BASE_PATH invalid or dir not found. Exists: {os.path.exists(IMAGE_BASE_PATH) if IMAGE_BASE_PATH else 'N/A'}")
             
     # 2. Fallback to Web (with validation)
     # These items are from 2020, so many public URLs are dead. 
@@ -110,7 +119,7 @@ def get_recommendations(customer_id):
         response = requests.post(
             f"{API_URL}/predict",
             json={"customer_id": int(customer_id), "top_k": 12},
-            timeout=5
+            timeout=60
         )
         if response.status_code == 200:
             return response.json().get("recommendations", [])
@@ -130,7 +139,7 @@ def get_recommendations(customer_id):
 with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/H%26M-Logo.svg/1024px-H%26M-Logo.svg.png", width=100)
     st.markdown("### User Profile")
-    st.markdown("Enter your Customer ID to get personalized fashion curations powered by our **Hybrid LightGBM Engine**.")
+    st.markdown("Enter your Customer ID to get personalized fashion curations")
     
     customer_id = st.text_input("Customer ID", value="123456")
     
@@ -157,8 +166,16 @@ st.markdown("Based on your purchase history and visual style preferences.")
 
 def validate_image_url(url):
     """
-    Checks if an image URL is alive. Returns the URL if yes, else a placeholder.
+    Checks if an image URL is alive or if a local file exists.
     """
+    # 1. Local File Check
+    if not url.startswith("http"):
+        if os.path.exists(url):
+            return url
+        # If local file is missing, return placeholder
+        return "https://placehold.co/300x445/EEE/31343C?text=Image+Missing"
+
+    # 2. Web URL Check
     try:
         # H&M often returns 200 for broken images (soft 404). 
         # We MUST check Content-Type to ensure it's a real image and not an error page/pixel.
@@ -172,6 +189,7 @@ def validate_image_url(url):
             return url
     except:
         pass
+    
     # Reliable Placeholder
     return "https://placehold.co/300x445/EEE/31343C?text=Image+Unavailable"
 

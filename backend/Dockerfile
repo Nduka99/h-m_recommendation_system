@@ -15,8 +15,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy all local files
 COPY . .
 
-# Be explicit about artifacts to ensure they are captured even if context is weird
-COPY artifacts/ artifacts/
+# Copy Artifacts (Explicitly to exclude heavy 500MB index)
+# We assume these exist in backend/artifacts/ from the setup step
+COPY artifacts/features_user.parquet artifacts/
+COPY artifacts/features_item.parquet artifacts/
+COPY artifacts/candidates_pool.parquet artifacts/
+COPY artifacts/article_map.parquet artifacts/
+COPY artifacts/lgbm_ranker.txt artifacts/
 
 # DEBUG: List the artifacts directory to confirm files are present during build
 RUN ls -la artifacts/
@@ -25,4 +30,4 @@ RUN ls -la artifacts/
 EXPOSE 8000
 
 # Command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

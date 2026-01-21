@@ -56,18 +56,16 @@ class RecSysEngine:
         Generates recommendations for a specific User ID.
         """
         # A. Fetch User Features
-        # We try to find the user in our database
+        print("   - Fetching User Features...")
         user_df = self.con.execute(f"SELECT * FROM users WHERE customer_id_int = {customer_id_int}").df()
         
         # B. Cold Start Check
-        # If user is not found (new user), return generic popular items
         if user_df.empty:
-            print(f"Cold Start for User {customer_id_int}")
+            print(f"   - Cold Start for User {customer_id_int}")
             return self._get_global_bestsellers(top_k)
 
-        # C. Candidate Generation (The "Candidates Pool")
-        # We join the pool of 2000 items with their Item Features
-        # Then we Cross-Join with the User Features (Broadcast 1 user to N items)
+        # C. Candidate Generation
+        print("   - Generating Candidates...")
         query = f"""
             SELECT 
                 c.article_id_int,
@@ -80,30 +78,26 @@ class RecSysEngine:
             (SELECT * FROM users WHERE customer_id_int = {customer_id_int}) u
         """
         candidates_df = self.con.execute(query).df()
+        print(f"   - Candidates Generated: {len(candidates_df)} rows")
         
         if candidates_df.empty:
             return self._get_global_bestsellers(top_k)
 
         # D. Dynamic Feature Engineering
-        # Calculate Interaction Features on the fly
-        
-        # Feature: Price Difference (Sticker Shock)
+        print("   - Feature Engineering...")
         candidates_df['price_diff'] = candidates_df['item_avg_price'] - candidates_df['user_avg_price']
-        
-        # Feature: Source & Scores
-        # For deployment speed, we treat these as "Bestseller" candidates (Source=1)
-        # We set ALS/Visual scores to -1 (Missing) as we can't run the full heavy engines live
         candidates_df['source'] = 1  
         candidates_df['als_score'] = -1
         candidates_df['visual_score'] = -1
         
-        # E. Prepare Data for Model
-        # Ensure columns are in the exact order the model expects
+        # E. Prepare Data
         X = candidates_df[self.feature_order]
         
-        # F. Predict (The Ranking)
+        # F. Predict
+        print("   - Running LightGBM Predict...")
         scores = self.model.predict(X)
         candidates_df['score'] = scores
+        print("   - Prediction Complete.")
         
         # G. Sort and Select Top K
         top_recs = candidates_df.sort_values('score', ascending=False).head(top_k)

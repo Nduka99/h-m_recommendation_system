@@ -1,0 +1,30 @@
+--- Asset Optimization Log ---
+Source dir /data/images checked. Contents: ['010', '011', '012', '013', '014']
+Loading candidates from /app/artifacts/candidates_pool.parquet...
+Found 5000 unique items in candidate pool (mapped).
+Processing images from /data/images to /output...
+DEBUG: Checking ID 0108775015 -> Path /data/images/010/0108775015.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0108775044 -> Path /data/images/010/0108775044.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0111565001 -> Path /data/images/011/0111565001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0111586001 -> Path /data/images/011/0111586001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0111593001 -> Path /data/images/011/0111593001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0111609001 -> Path /data/images/011/0111609001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0120129001 -> Path /data/images/012/0120129001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0123173001 -> Path /data/images/012/0123173001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0129085001 -> Path /data/images/012/0129085001.jpg
+DEBUG: Exists? True
+DEBUG: Checking ID 0146730001 -> Path /data/images/014/0146730001.jpg
+DEBUG: Exists? True
+
+--- Optimization Complete ---
+Successfully optimized: 4984
+Missing source images: 16
+Errors: 0
