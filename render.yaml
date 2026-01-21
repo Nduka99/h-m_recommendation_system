@@ -1,0 +1,31 @@
+services:
+  # BACKEND SERVICE
+  - type: web
+    name: hm-recsys-backend
+    runtime: docker
+    repo: https://github.com/Nduka99/h-m_recommendation_system
+    plan: free
+    region: oregon
+    rootDir: backend
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+    healthCheckPath: /
+
+  # FRONTEND SERVICE
+  - type: web
+    name: hm-recsys-frontend
+    runtime: docker
+    repo: https://github.com/Nduka99/h-m_recommendation_system
+    plan: free
+    region: oregon
+    rootDir: frontend
+    dockerContext: frontend
+    dockerfilePath: frontend/Dockerfile
+    envVars:
+      - key: API_URL
+        value: https://hm-recsys-backend.onrender.com
+      - key: IMAGE_BASE_PATH
+        value: /app/deployment_images
