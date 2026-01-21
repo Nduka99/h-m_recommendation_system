@@ -32,3 +32,5 @@ verify_*.py
 verify_*.ps1
 debug_*.py
 relaunch_*.ps1
+
+deploy_to_dockerhub.ps1
