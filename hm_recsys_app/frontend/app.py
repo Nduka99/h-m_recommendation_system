@@ -154,7 +154,7 @@ with st.sidebar:
 st.title("Top Picks For You")
 st.markdown("Based on your purchase history and visual style preferences.")
 
-@st.cache_data(show_spinner=False)
+
 def validate_image_url(url):
     """
     Checks if an image URL is alive. Returns the URL if yes, else a placeholder.
