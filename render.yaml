@@ -7,8 +7,8 @@ services:
     plan: free
     region: oregon
     rootDir: backend
-    dockerContext: backend
-    dockerfilePath: backend/Dockerfile
+    dockerContext: .
+    dockerfilePath: Dockerfile
     envVars:
       - key: PYTHONUNBUFFERED
         value: 1
@@ -22,8 +22,9 @@ services:
     plan: free
     region: oregon
     rootDir: frontend
-    dockerContext: frontend
-    dockerfilePath: frontend/Dockerfile
+    dockerContext: .
+    dockerfilePath: Dockerfile
+
     envVars:
       - key: API_URL
         value: https://hm-recsys-backend.onrender.com
