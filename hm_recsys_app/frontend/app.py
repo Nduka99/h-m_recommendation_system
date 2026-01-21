@@ -104,21 +104,6 @@ def get_image_url(article_id_str):
     
     return url
 
-@st.cache_data(show_spinner=False)
-def validate_image_url(url):
-    """
-    Checks if an image URL is alive. Returns the URL if yes, else a placeholder.
-    Cached to prevent slowing down the app.
-    """
-    try:
-        # Fast HEAD request
-        r = requests.head(url, timeout=0.8)
-        if r.status_code == 200:
-            return url
-    except:
-        pass
-    # Return a clean placeholder
-    return "https://via.placeholder.com/300x445/21262d/ffffff?text=Image+Unavailable"
 
 def get_recommendations(customer_id):
     try:
@@ -161,10 +146,30 @@ with st.sidebar:
                 st.warning("Issues Detected 🟡")
         except:
             st.error("Offline 🔴")
+            
+    st.markdown("---")
+    show_debug = st.checkbox("Show Debug Info", value=False)
 
 # Main Content
 st.title("Top Picks For You")
 st.markdown("Based on your purchase history and visual style preferences.")
+
+@st.cache_data(show_spinner=False)
+def validate_image_url(url):
+    """
+    Checks if an image URL is alive. Returns the URL if yes, else a placeholder.
+    """
+    try:
+        # H&M often returns 200 for broken images (soft 404), but let's try basic connection
+        r = requests.head(url, timeout=1.5)
+        if r.status_code == 200:
+            return url
+    except:
+        pass
+    # Reliable Placeholder
+    return "https://placehold.co/300x445/EEE/31343C?text=Image+Unavailable"
+
+
 
 if customer_id:
     # Fetch Recommendations
@@ -185,6 +190,8 @@ if customer_id:
                 # Caption / Details
                 st.markdown(f"**{article_id}**")
                 st.caption("Premium Selection")
+                if show_debug:
+                    st.text(f"URL: {img_url}")
                 
     elif customer_id and not recs:
         st.info("No specific recommendations found. Try another User ID.")
